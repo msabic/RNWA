@@ -8,8 +8,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        
+        $(document).ready(function(){
+        $('.form-control').keyup(function(){$("#txtHint").load("trazilica.php?s=" + $(this).val());
+    });
+        
+});
 
-    <title>Shop Homepage - Start Bootstrap Template</title>
+    </script>
+    <script type="text/javascript">
+        function showHint(str) {
+    if (str.length == 0) { 
+        document.getElementById("txtHint").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
+            }
+        }
+        xmlhttp.open("GET", "trazilica.php?s=" + str, true);
+        xmlhttp.send();
+    }
+}
+    </script>
+    <title>Iznajmljivanje nekretnina</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -39,13 +65,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Start Bootstrap</a>
+                <a class="navbar-brand" href="index.php">Start Bootstrap</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                    
                     <li>
-                        <a href="#">About</a>
+                        <a href="about.html">About</a>
                     </li>
                     <li>
                         <a href="#">Services</a>
@@ -53,6 +80,10 @@
                     <li>
                         <a href="#">Contact</a>
                     </li>
+                    <li>
+                        <a href="#">Login</a>
+                    </li>
+                    
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -64,14 +95,31 @@
     <div class="container">
 
         <div class="row">
-
+        
+      
+            
+        
             <div class="col-md-3">
-                <p class="lead">Shop Name</p>
+            
+        
+                <p class="lead">Vrste nekretnina</p>
                 <div class="list-group">
-                    <a href="#" class="list-group-item">Category 1</a>
+                <?php
+                include("connect.php");
+                $query="SELECT `tip` FROM `vrsta_nekretnine`";
+                $result=$con->query($query);
+                while($row = mysqli_fetch_array($result))
+                { 
+                    $tip_nekretnine=$row['tip'];
+                    echo'<a href="#" class="list-group-item">'.$tip_nekretnine.'</a>';
+                }
+                ?>
+                   <!-- <a href="#" class="list-group-item">Category 1</a>
                     <a href="#" class="list-group-item">Category 2</a>
-                    <a href="#" class="list-group-item">Category 3</a>
+                    <a href="#" class="list-group-item">Category 3</a>-->
                 </div>
+                <input type="text" class="form-control" placeholder="Tražilica:" name="trazilica">
+                <input type="text" class="form-control" placeholder="Tražilica:" name="trazilica" onkeyup="showHint(this.value)">
             </div>
 
             <div class="col-md-9">
@@ -112,6 +160,7 @@
                 </div>
 
                 <div class="row"> <!--prvi div za prikaz nekretnina-->
+                <div id="txtHint"></div>
                 <?php
                  include ("connect.php");
                 $query = "SELECT `idnekretnina`, `naziv`,`cijena`, `opis_nekretnine` FROM `nekretnina` LIMIT 7";
@@ -129,100 +178,21 @@
                     {
                     $slika=$rez['lokacija'];
                     }
-                     echo ' <div class="col-sm-4 col-lg-4 col-md-4">
+                    /* echo ' <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">
                             <img src="'.$slika.'" alt="">
                             <div class="caption">
-                                <h4 class="pull-right">'.$cijena.'</h4>
+                                <h4 class="pull-right">'.$cijena.'KN</h4>
                                 <h4><a href="#">'.$naziv.'</a>
                                 </h4>
                                 <p>'.$opis.'</p>
                             </div>
                            
                         </div>
-                    </div>';
+                    </div>';*/
                   }
                 ?>
-                    <!--<div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="http://placehold.it/320x150" alt="">
-                            <div class="caption">
-                                <h4 class="pull-right">$24.99</h4>
-                                <h4><a href="#">First Product</a>
-                                </h4>
-                                <p>See more snippets like this online store item at <a target="_blank" href="http://www.bootsnipp.com">Bootsnipp - http://bootsnipp.com</a>.</p>
-                            </div>
-                           
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="http://placehold.it/320x150" alt="">
-                            <div class="caption">
-                                <h4 class="pull-right">$64.99</h4>
-                                <h4><a href="#">Second Product</a>
-                                </h4>
-                                <p>This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                           
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="http://placehold.it/320x150" alt="">
-                            <div class="caption">
-                                <h4 class="pull-right">$74.99</h4>
-                                <h4><a href="#">Third Product</a>
-                                </h4>
-                                <p>This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                            
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="http://placehold.it/320x150" alt="">
-                            <div class="caption">
-                                <h4 class="pull-right">$84.99</h4>
-                                <h4><a href="#">Fourth Product</a>
-                                </h4>
-                                <p>This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                            
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="http://placehold.it/320x150" alt="">
-                            <div class="caption">
-                                <h4 class="pull-right">$94.99</h4>
-                                <h4><a href="#">Fifth Product</a>
-                                </h4>
-                                <p>This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                            
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="http://placehold.it/320x150" alt="">
-                            <div class="caption">
-                                <h4 class="pull-right">$94.99</h4>
-                                <h4><a href="#">Fifth Product</a>
-                                </h4>
-                                <p>This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                            
-                        </div>
-                    </div>-->
-
                     
-
                 </div>  <!--prvi div za prikaz nekretnina-->
 
             </div>
