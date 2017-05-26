@@ -118,8 +118,10 @@
                     <a href="#" class="list-group-item">Category 2</a>
                     <a href="#" class="list-group-item">Category 3</a>-->
                 </div>
-                <input type="text" class="form-control" placeholder="Tražilica:" name="trazilica">
-                <input type="text" class="form-control" placeholder="Tražilica:" name="trazilica" onkeyup="showHint(this.value)">
+                <input type="text" class="form-control" placeholder="Tražilica AJAX:" name="trazilica">
+                <input type="text" class="form-control" placeholder="Tražilica JQ:" name="trazilica" onkeyup="showHint(this.value)">
+                <input type="text" class="form-control" placeholder="Tražilica WS:" name="trazilicaws">
+                <input type="submit" name="trazi" >
             </div>
 
             <div class="col-md-9">
@@ -192,7 +194,61 @@
                     </div>';*/
                   }
                 ?>
+                    <?php
+                if (isset($_REQUEST["naziv"])){
+                    $naziv=$_REQUEST["naziv"];
+                    $params=$naziv;
+                    echo "Ispis  tvrtke:  ".$naziv.""; 
+                    try{
+                        ini_set('soap.wsdl_cache_enabled',0);
+                        ini_set('soap.wsdl_cache_ttl',0);
+                      //$sClient = new SoapClient('http://localhost/djelatnici1/hello.xml,);
+                      $sClient = new SoapClient('ispis.wsdl',
+                      array(
+                      'cache_wsdl'=>WSDL_CACHE_NONE,
+                      'trace'=>1,
+                      'user' => 'root',
+                      'pass' => '',
+                      'exceptions' => 0
+                    ));
+                      //$sClient = new SoapClient('hello.wsdl');
+                      
+                      //$params = "Aqila";
+                      //echo "<br>REQUEST:\n" . $sClient->__getLastRequest() . "\n";
+                      //echo "<pre>";
+                      $response = $sClient->doHello($params);
+                        //echo "<br>REQUEST:<br>";
+                        //echo "<textarea cols=\"60\" rows=\"20\">". htmlspecialchars($sClient->__getLastRequest())."</textarea>";
+                        
+                      
+                      //var_dump($response);
+                      //print_r($response);
+                      echo "<br><br><br>ODGOVOR:<br>";
+                      //echo "<textarea cols=\"30\" rows=\"40\">". htmlspecialchars($sClient->__getLastResponse())."</textarea>";
+
+                        
+                      $risponz = $sClient->__getLastResponse();
+                      
+                      $json_2 = str_replace( array('[',']') , ''  , $risponz );
+                        $jsonn = json_encode($json_2);
+                      echo '<pre>' . $jsonn  . '</pre>';
+
+                    } catch(SoapFault $e){
+                        echo $e->getMessage();
+                    }
+                }
+                else {
+
+                    echo "Napravi  pretragu tvrtki po nazivum, unijeti naziv tvrtke u polje ispod<br>  ";
+                    echo "<p>Forma poziva web servis koji pretražuje tvrtke s nazivom koji ste unijeli - vrača JSON odgovor u ovom slučaju</p> ";
+                    echo "<form method=\"get\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\">";
+                    echo "Naziv tvrtke: <input type=\"text\" name=\"naziv\">";
+                    echo " <input type=\"submit\" name=\"submit\" value=\"Pretraga\"> ";
+                    echo "</form>";
                     
+                }
+                
+                ?>
                 </div>  <!--prvi div za prikaz nekretnina-->
 
             </div>
@@ -210,7 +266,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2014</p>
+                    <p>Otraj dotraj d.o.o &copy; Your Website 2017</p>
                 </div>
             </div>
         </footer>
