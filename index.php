@@ -120,8 +120,7 @@
                 </div>
                 <input type="text" class="form-control" placeholder="Tražilica AJAX:" name="trazilica">
                 <input type="text" class="form-control" placeholder="Tražilica JQ:" name="trazilica" onkeyup="showHint(this.value)">
-                <input type="text" class="form-control" placeholder="Tražilica WS:" name="trazilicaws">
-                <input type="submit" name="trazi" >
+               
             </div>
 
             <div class="col-md-9">
@@ -229,9 +228,9 @@
                         
                       $risponz = $sClient->__getLastResponse();
                       
-                      $json_2 = str_replace( array('[',']') , ''  , $risponz );
-                        $jsonn = json_encode($json_2);
-                      echo '<pre>' . $jsonn  . '</pre>';
+                      //$json_2 = str_replace( array('[',']') , ''  , $risponz );
+                        
+                      echo '<pre>' . $risponz . '</pre>';
 
                     } catch(SoapFault $e){
                         echo $e->getMessage();
@@ -239,8 +238,8 @@
                 }
                 else {
 
-                    echo "Napravi  pretragu tvrtki po nazivum, unijeti naziv tvrtke u polje ispod<br>  ";
-                    echo "<p>Forma poziva web servis koji pretražuje tvrtke s nazivom koji ste unijeli - vrača JSON odgovor u ovom slučaju</p> ";
+                    
+                    echo "<p>Forma poziva web servis koji pretražuje nekretnine s nazivom koji ste unijeli</p> ";
                     echo "<form method=\"get\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\">";
                     echo "Naziv tvrtke: <input type=\"text\" name=\"naziv\">";
                     echo " <input type=\"submit\" name=\"submit\" value=\"Pretraga\"> ";
