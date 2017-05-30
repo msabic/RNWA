@@ -65,7 +65,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">Start Bootstrap</a>
+                <!--<a class="navbar-brand" href="index.php">Start Bootstrap</a>-->
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -120,7 +120,13 @@
                 </div>
                 <input type="text" class="form-control" placeholder="Tražilica AJAX:" name="trazilica">
                 <input type="text" class="form-control" placeholder="Tražilica JQ:" name="trazilica" onkeyup="showHint(this.value)">
-               
+                
+
+                <form action="wsbwsdl/helloclient.php" method="post">
+                     <input type="text" class="form-control" placeholder="Tražilica Bez wsdla:" name="trazilicax">
+                     <button>Traži po nazivu</button>
+                </form>
+
             </div>
 
             <div class="col-md-9">
@@ -197,11 +203,11 @@
                 if (isset($_REQUEST["naziv"])){
                     $naziv=$_REQUEST["naziv"];
                     $params=$naziv;
-                    echo "Ispis  tvrtke:  ".$naziv.""; 
+                    echo "Ispis  nekretnine:  ".$naziv.""; 
                     try{
                         ini_set('soap.wsdl_cache_enabled',0);
                         ini_set('soap.wsdl_cache_ttl',0);
-                      //$sClient = new SoapClient('http://localhost/djelatnici1/hello.xml,);
+                      
                       $sClient = new SoapClient('ispis.wsdl',
                       array(
                       'cache_wsdl'=>WSDL_CACHE_NONE,
@@ -210,21 +216,11 @@
                       'pass' => '',
                       'exceptions' => 0
                     ));
-                      //$sClient = new SoapClient('hello.wsdl');
                       
-                      //$params = "Aqila";
-                      //echo "<br>REQUEST:\n" . $sClient->__getLastRequest() . "\n";
-                      //echo "<pre>";
                       $response = $sClient->doHello($params);
-                        //echo "<br>REQUEST:<br>";
-                        //echo "<textarea cols=\"60\" rows=\"20\">". htmlspecialchars($sClient->__getLastRequest())."</textarea>";
                         
-                      
-                      //var_dump($response);
-                      //print_r($response);
                       echo "<br><br><br>ODGOVOR:<br>";
-                      //echo "<textarea cols=\"30\" rows=\"40\">". htmlspecialchars($sClient->__getLastResponse())."</textarea>";
-
+                      
                         
                       $risponz = $sClient->__getLastResponse();
                       
@@ -248,6 +244,8 @@
                 }
                 
                 ?>
+
+               
                 </div>  <!--prvi div za prikaz nekretnina-->
 
             </div>
