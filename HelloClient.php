@@ -122,7 +122,10 @@
                 <input type="text" class="form-control" placeholder="Tražilica JQ:" name="trazilica" onkeyup="showHint(this.value)">
                 
 
-                
+                <form action="index.php" method="post">
+                     <input type="text" class="form-control" placeholder="Tražilica Bez wsdla:" name="trazilicax" value="">
+                     <button>Traži po nazivu</button>
+                </form>
 
             </div>
 
@@ -223,13 +226,7 @@
                       
                       //$json_2 = str_replace( array('[',']') , ''  , $risponz );
                         
-                      echo '<pre>';
-                      //var_dump($risponz);
-                      $rez=json_decode($response);
-                      //echo $rez;
-                      
-                      print_r($rez);
-                      echo '</pre>';
+                      echo '<pre>' . $risponz . '</pre>';
 
                     } catch(SoapFault $e){
                         echo $e->getMessage();
@@ -247,25 +244,22 @@
                 }
                 
                 ?>
-                <?php # HelloClient.php
+                
+               <?php # HelloClient.php
 # Copyright (c) 2005 by Dr. Herong Yang
 #  
-    if (isset($_REQUEST["trazilicax"])){$naziv=$_REQUEST['trazilicax'];
+	$naziv=$_POST['trazilicax'];
    $client = new SoapClient(null, array(
       'location' => "http://localhost:8080/RNWA/wsbwsdl/HelloServer.php",
       'uri'      => "urn://neretva.fsr.ba/hello",
       'trace'    => 1 ));
 
    $return = $client->__soapCall("hello",array("$naziv"));
-    echo("\n<pre>".$return)."</pre>";}
-else{
-echo "<form method=\"get\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\">";
-                    echo "Naziv tvrtke: <input type=\"text\" name=\"trazilicax\"  placeholder=\"Tražilica bez wsdl:\">";
-                    echo " <input type=\"submit\" name=\"submit\" value=\"Pretraga\"> ";
-                    echo "</form>";
-    }
+   	echo("\n<pre>".$return)."</pre>";
+
+
+
 ?>
-               
                 </div>  <!--prvi div za prikaz nekretnina-->
 
             </div>

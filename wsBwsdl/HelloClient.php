@@ -10,9 +10,6 @@
    $return = $client->__soapCall("hello",array("$naziv"));
    	echo("\n<pre>".$return)."</pre>";
 
-   
 
- 
-
-
+   	
 ?>

@@ -1,14 +1,8 @@
-<?php
-if(!extension_loaded("soap")){
-  dl("php_soap.dll");
-}
-
-ini_set("soap.wsdl_cache_enabled",0);
-$server = new SoapServer("ispis.wsdl");
-
-function doHello($yourName){
- 
-$username = "root";
+<?php # HelloServer.php
+# Copyright (c) 2005 by Dr. Herong Yang, http://www.herongyang.com/
+#
+function hello($someone) { 
+  $username = "root";
 $password = "";
 $hostname = "localhost"; 
 
@@ -18,7 +12,7 @@ $dbhandle = mysql_connect($hostname, $username, $password)
 $selected = mysql_select_db("iznajmljivanje_nekretnina",$dbhandle)
   or die("Could not select iznajmljivanje_nekretnina");
 
-$result = mysql_query("SELECT *  FROM NEKRETNINA where NAZIV= \"" . $yourName."\"");
+$result = mysql_query("SELECT *  FROM NEKRETNINA where NAZIV= \"" . $someone."\"");
 $response = array();
   
   while ($row = mysql_fetch_array($result)) {
@@ -64,10 +58,11 @@ $tmp            = array();
     $jsonn = json_encode($response);
   
   
-  return $jsonn;
-  //return $privremeni;
-}
-
-$server->AddFunction("doHello");
-$server->handle();
+  //return $jsonn;
+      return $privremeni;
+} 
+   $server = new SoapServer(null, 
+      array('uri' => "urn://www.herong.home/res"));
+   $server->addFunction("hello"); 
+   $server->handle(); 
 ?>
