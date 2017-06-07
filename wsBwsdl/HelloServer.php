@@ -58,7 +58,7 @@ $tmp            = array();
     $jsonn = json_encode($response);
   
   
-  //return $jsonn;
+  return $jsonn;
       return $privremeni;
 } 
    $server = new SoapServer(null, 

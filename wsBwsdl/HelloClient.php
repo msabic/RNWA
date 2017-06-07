@@ -8,7 +8,7 @@
       'trace'    => 1 ));
 
    $return = $client->__soapCall("hello",array("$naziv"));
-   	echo("\n<pre>".$return)."</pre>";
+   	echo("\n<pre>".var_dump($return))."</pre>";
 
 
    	

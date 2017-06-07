@@ -1,3 +1,15 @@
+
+<?php
+if (isset($_COOKIE['uname'])){
+$prijavljen=true;
+$razina=$_COOKIE['razina'];
+}
+else {
+$prijavljen=false;
+$razina=0;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,6 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script type="text/javascript">
         
@@ -75,17 +88,46 @@
                         <a href="about.html">About</a>
                     </li>
                     <li>
-                        <a href="#">Services</a>
+                        <a href="mvc.php">MVC</a>
                     </li>
                     <li>
                         <a href="#">Contact</a>
                     </li>
-                    <li>
-                        <a href="#">Login</a>
-                    </li>
+                   
                     
                 </ul>
-            </div>
+<?php
+if(!isset($_COOKIE['uname']))
+    {
+                echo' <form method="post" action="prijava.php" >
+                     <ul class="nav navbar-nav" style="float: right; padding: 1%">
+                    
+                     <li>
+                    <input type="email" class="form-control" placeholder="Korisnicko ime:" name="username">
+                    </li>
+                    <li>
+                    <input type="password" class="form-control" placeholder="Lozinka:" name="password">
+                    </li>
+                    <input class="btn btn-primary" type="submit" name="Prijava " value="Prijavi se" >
+                    </ul>
+                    </form>';
+                }
+                else
+                {
+                    echo '
+                    <form method="post" action="logout.php" >
+                    <ul class="nav navbar-nav" style="float: right; padding: 1%">
+                    <li>
+                    <input class="btn btn-primary" type="submit" name="Prijava " value="Odjavi se" >
+                    </li
+                    </ul>
+                    </form>
+                    ';
+                }
+                    ?>
+                }
+                </div>
+           
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
@@ -200,7 +242,7 @@
                 if (isset($_REQUEST["naziv"])){
                     $naziv=$_REQUEST["naziv"];
                     $params=$naziv;
-                    echo "Ispis  nekretnine:  ".$naziv.""; 
+                    //echo "Ispis  nekretnine:  ".$naziv.""; 
                     try{
                         ini_set('soap.wsdl_cache_enabled',0);
                         ini_set('soap.wsdl_cache_ttl',0);
@@ -223,27 +265,57 @@
                       
                       //$json_2 = str_replace( array('[',']') , ''  , $risponz );
                         
-                      echo '<pre>';
+                      //echo '<pre>';
                       //var_dump($risponz);
                       $rez=json_decode($response);
                       //echo $rez;
                       
-                      print_r($rez);
-                      echo '</pre>';
+                     // print_r($rez);
+                      //echo '</pre>';
+
+
+
+
+
+                      $queryy = "SELECT `lokacija` FROM `slike` WHERE `nekretnina_idnekretnina`=".$rez[0]->{'Id nekretnina'}."";
+                    $resulte = $con->query($queryy);
+                    while($rezu=$resulte->fetch_array())
+                    {
+                    $slika=$rezu['lokacija'];
+                    }
+                    echo ' <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="thumbnail">
+                            <img src="'.$slika.'" alt="">
+                            <div class="caption">
+                                <h4 class="pull-right">'.$rez[0]->{'Cijena'}.'KN</h4>
+                                <h4><a href="#">'.$rez[0]->{'Naziv nekretnine'}.'</a>
+                                </h4>
+                                <p>'.$rez[0]->{'Opis'}.'</p>
+                            </div>
+                           
+                        </div>
+                    </div>';
+
+
+
+
+
+
 
                     } catch(SoapFault $e){
                         echo $e->getMessage();
                     }
                 }
                 else {
-
+if(isset($_COOKIE['uname']))
+    {
                     
                     echo "<p>Forma poziva web servis koji pretražuje nekretnine s nazivom koji ste unijeli</p> ";
                     echo "<form method=\"get\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\">";
                     echo "Naziv tvrtke: <input type=\"text\" name=\"naziv\">";
                     echo " <input type=\"submit\" name=\"submit\" value=\"Pretraga\"> ";
                     echo "</form>";
-                    
+                    }
                 }
                 
                 ?>
@@ -255,14 +327,35 @@
       'location' => "http://localhost:8080/RNWA/wsbwsdl/HelloServer.php",
       'uri'      => "urn://neretva.fsr.ba/hello",
       'trace'    => 1 ));
-
+   $r=$client->hello("$naziv");
+   $rr=json_decode($r);
    $return = $client->__soapCall("hello",array("$naziv"));
-    echo("\n<pre>".$return)."</pre>";}
+     $queryy = "SELECT `lokacija` FROM `slike` WHERE `nekretnina_idnekretnina`=".$rr[0]->{'Id nekretnina'}."";
+                    $resulte = $con->query($queryy);
+                    while($rezu=$resulte->fetch_array())
+                    {
+                    $slika=$rezu['lokacija'];
+                    }
+                    echo ' <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="thumbnail">
+                            <img src="'.$slika.'" alt="">
+                            <div class="caption">
+                                <h4 class="pull-right">'.$rr[0]->{'Cijena'}.'KN</h4>
+                                <h4><a href="#">'.$rr[0]->{'Naziv nekretnine'}.'</a>
+                                </h4>
+                                <p>'.$rr[0]->{'Opis'}.'</p>
+                            </div>
+                           
+                        </div>
+                    </div>';}
 else{
+    if(isset($_COOKIE['uname']))
+    {
 echo "<form method=\"get\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\">";
                     echo "Naziv tvrtke: <input type=\"text\" name=\"trazilicax\"  placeholder=\"Tražilica bez wsdl:\">";
                     echo " <input type=\"submit\" name=\"submit\" value=\"Pretraga\"> ";
                     echo "</form>";
+                }
     }
 ?>
                
